@@ -1,0 +1,12 @@
+---
+title: "blog info"
+output: 
+  html_document
+---
+```{r}
+library(data.table)
+data <- fread('journal_costs_melted.tab', header = T)
+data[year==2014,.(total=sum(cost, na.rm = T)),by=institute][total>0][order(-total)][1:20]
+data[year==2014,.(total=sum(cost, na.rm=T)), by=publisher][order(-total)]
+```
+

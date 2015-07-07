@@ -12,7 +12,3 @@ x <- data.table(t(m), year=year, publisher=pubs)
 setnames(x, colnames(x)[1:153], uni)
 y <- melt.data.table(x, id.vars = c("year", "publisher"), variable.name = "institute", value.name = "cost")
 write.table(y, "journal_costs_melted.tab", col.names=T, row.names=F, quote=F, sep="\t")
-
-data <- fread('journal_costs_melted.tab', header = T)
-data[,.(total=sum(cost, na.rm = T)),by=institute][total>0][order(-total)][1:20]
-data[,.(total=sum(cost, na.rm=T)), by=publisher][order(-total)]
