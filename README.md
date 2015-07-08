@@ -5,4 +5,4 @@ Lawson S and Meghreblian B. Journal subscription expenditure of UK higher educat
 
 This shiny app displays the data in an interactive way and can be seen at http://shiny.retr0.me/journal_costs/
 
-More details in the blog post [here](http://retr0.me/posts/2015/07/07/UK-HEI-journal-subscriptions.html)
+More details in the blog post [here](http://retr0.me/2015/07/07/UK-HEI-journal-subscriptions.html)
