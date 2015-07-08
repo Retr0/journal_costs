@@ -5,8 +5,14 @@ output:
 ---
 ```{r}
 library(data.table)
+library(ggplot2)
+library(scales)
 data <- fread('journal_costs_melted.tab', header = T)
 data[year==2014,.(total=sum(cost, na.rm = T)),by=institute][total>0][order(-total)][1:20]
 data[year==2014,.(total=sum(cost, na.rm=T)), by=publisher][order(-total)]
+p <- ggplot(data[,.(cost=sum(cost, na.rm = T)),by=.(year, publisher)], aes(year, cost, fill=publisher)) +geom_bar(stat = "identity") + scale_y_continuous(labels = comma) +ylab("Total cost (£)")
+png('total_year.png', width = 9, height = 7, units = "in", res=100)
+p
+dev.off()
 ```
 

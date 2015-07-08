@@ -1,11 +1,14 @@
 library(shiny)
 
 shinyUI(fluidPage(
-  titlePanel("UK University Journal Costs for 2014"),
+  titlePanel("UK University Journal Costs"),
     
   sidebarLayout(
-    sidebarPanel( uiOutput("instSelector") ),
+    sidebarPanel( uiOutput("yearSelector"),
+                  uiOutput("instSelector")),
+    
     mainPanel(plotOutput(outputId = "plot1"),
               dataTableOutput(outputId="dt1"))
   )
-))
+)
+)
