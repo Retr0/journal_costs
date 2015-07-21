@@ -1,15 +1,17 @@
 library(shiny)
 
 shinyUI(fluidPage(
-  titlePanel("UK University Journal Costs"),
+  titlePanel(HTML("<h5><h5><style>h2,h4 { display: inline; }</style><h2>UK University Journal Costs</h2><h4><span style=float:right><a href=\"http://retr0.me/2015/07/07/UK-HEI-journal-subscriptions.html\">About</a></span></h4><h5></h5>"), 
+             windowTitle = "UK University Journal Costs"
+                ),
     
   sidebarLayout(
     sidebarPanel( uiOutput("yearSelector"),
                   uiOutput("instSelector")),
     
     mainPanel(plotOutput(outputId = "plot1"),
-              dataTableOutput(outputId="dt1"),
-              h5(tags$a(href="http://retr0.me/2015/07/07/UK-HEI-journal-subscriptions.html", "Blog post with more details")))
+              dataTableOutput(outputId="dt1")
   )
+)
 )
 )
