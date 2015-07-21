@@ -10,6 +10,7 @@ setkey(data, year, institute)
 
 # precompute the ranks
 ranks <- data[,.(total=sum(cost, na.rm = T)),by=.(institute, year)][, .(institute, total, rank=frank(-total, ties.method = "min")), by=year]
+ranks[,total := formatC(total, big.mark = ",", format = 'd')]
 setkey(ranks, year, institute)
 
 shinyServer(
@@ -41,8 +42,7 @@ shinyServer(
     
     output$dt1 <- renderDataTable(expr = {
       if (!is.null(input$inInst)) {
-        dataDT <- ranks[J(as.numeric(input$inYear), input$inInst)][order(-total), .(rank, institute, total)]
-        dataDT[,total := formatC(total, big.mark = ",", format = 'd')]
+        dataDT <- ranks[J(as.numeric(input$inYear), input$inInst)][order(rank), .(rank, institute, total)]
         setnames(dataDT, c('rank','institute','total'), c("Rank", "Institute", "Total (£)"))
         dataDT
       }
