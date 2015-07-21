@@ -47,7 +47,9 @@ shinyServer(
         dataDT
       }
     }, options = list(searching = FALSE,
-                      paging = FALSE))
+                      paging = T,
+                      lengthMenu = list(c(5, 10, -1), c('5', '10', 'All')),
+                      pageLength = 5))
     
   }
 )
