@@ -9,9 +9,10 @@ shinyUI(fluidPage(
     sidebarPanel( uiOutput("yearSelector"),
                   uiOutput("instSelector")),
     
-    mainPanel(plotOutput(outputId = "plot1"),
-              dataTableOutput(outputId="dt1")
-  )
+    mainPanel( absolutePanel(  plotOutput(outputId = "plot1"),
+              dataTableOutput(outputId="dt1") , fixed=T, right=0, width="66%")
+  
+)
 )
 )
 )
