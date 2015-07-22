@@ -25,16 +25,23 @@ shinyServer(
     output$instSelector <- renderUI({
       checkboxGroupInput(inputId = "inInst", "Choose Institute:", 
                          institutes, 
-                         selected = c("University of Manchester",
-                                      "Open University")) 
+                         selected = c("University of Aberdeen",
+                                      "Aberystwyth University")) 
     })
     
     output$plot1 <- renderPlot(expr = {
       if (!is.null(input$inInst)) {
-        p <- (ggplot(data[J(as.numeric(input$inYear), input$inInst)]) + geom_bar(
+        dataGraph <- data[J(as.numeric(input$inYear), input$inInst)]
+        dataGraph[, institute := gsub("University of ", "", institute)]
+        dataGraph[, institute := gsub(" University", "", institute)]
+        dataGraph[, institute := gsub(" ", "\n", institute)]
+        p <- (ggplot(dataGraph) + geom_bar(
           aes(x = institute, y = cost, fill = publisher), stat = "identity")
         + scale_y_continuous(labels = comma) 
         +ylab("Total cost (£)")
+        +xlab(NULL)
+        +theme(axis.text.x = element_text(colour="black"),
+               axis.text.y = element_text(colour="black"))
         )
         print(p)
       }
