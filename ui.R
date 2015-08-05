@@ -9,7 +9,7 @@ shinyUI(fluidPage(
     sidebarPanel( 
                   uiOutput("yearSelector"),
                   uiOutput("instSelector"),
-                  textInput("save_text", label = "URL:", value="")
+                  textInput("save_text", label = "Link to current state:", value="")
                   ),
     
     mainPanel( absolutePanel(  plotOutput(outputId = "plot1"),

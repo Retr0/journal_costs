@@ -75,13 +75,13 @@ shinyServer(
     
     observe({
       inst_ids <- paste( which(institutes %in% input$inInst), sep="" ,collapse="," )
-      updateTextInput(session,inputId = "save_text", label="URL:", value=paste(session$clientData$url_protocol,"//",
-                                      session$clientData$url_hostname,
-                                      session$clientData$url_pathname,
-                                      "?year=", input$inYear, 
-                                      "&inst=", inst_ids,
-                                      sep=""))
-      
+      updateTextInput(session, inputId = "save_text", label="Link to current state:", 
+                      value = paste( session$clientData$url_protocol, "//",
+                                     session$clientData$url_hostname,
+                                     session$clientData$url_pathname,
+                                     "?year=", input$inYear,
+                                     "&inst=", inst_ids,
+                                     sep=""))
     })
   }
 )
