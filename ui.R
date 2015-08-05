@@ -6,8 +6,11 @@ shinyUI(fluidPage(
                 ),
     
   sidebarLayout(
-    sidebarPanel( uiOutput("yearSelector"),
-                  uiOutput("instSelector")),
+    sidebarPanel( 
+                  uiOutput("yearSelector"),
+                  uiOutput("instSelector"),
+                  textInput("save_text", label = "URL:", value="")
+                  ),
     
     mainPanel( absolutePanel(  plotOutput(outputId = "plot1"),
               dataTableOutput(outputId="dt1") , fixed=T, right=0, width="66%")

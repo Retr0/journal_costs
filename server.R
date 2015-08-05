@@ -14,19 +14,33 @@ ranks[,total := formatC(total, big.mark = ",", format = 'd')]
 setkey(ranks, year, institute)
 
 shinyServer(
-  function(input, output) {
+  function(input, output, session) {
     
     output$yearSelector <- renderUI({
+      year=2014
+      query <- parseQueryString(session$clientData$url_search)
+      if ("year" %in% names(query)){ 
+        if (query$year %in% years) {
+          year <- query$year 
+        }
+      }
       selectInput(inputId = "inYear", "Choose Year:", 
                          years, 
-                         selected = 2014 ) 
+                         selected = year ) 
     })
     
     output$instSelector <- renderUI({
+      inst_sel = c(1, 3)
+      query <- parseQueryString(session$clientData$url_search)
+      if ("inst" %in% names(query)){
+        inst_string <- as.numeric(strsplit(query$inst, ",")[[1]])
+        if (all(inst_string %in% 1:length(institutes))){
+          inst_sel <- inst_string 
+        }
+      }
       checkboxGroupInput(inputId = "inInst", "Choose Institute:", 
                          institutes, 
-                         selected = c("University of Aberdeen",
-                                      "Aberystwyth University")) 
+                         selected = institutes[inst_sel]) 
     })
     
     output$plot1 <- renderPlot(expr = {
@@ -55,8 +69,19 @@ shinyServer(
       }
     }, options = list(searching = FALSE,
                       paging = T,
-                      lengthMenu = list(c(5, 10, -1), c('5', '10', 'All')),
-                      pageLength = 5))
+                      lengthMenu = list(c(2, 5, 10, -1), c('2','5', '10', 'All')),
+                      pageLength = 5)
+    )
     
+    observe({
+      inst_ids <- paste( which(institutes %in% input$inInst), sep="" ,collapse="," )
+      updateTextInput(session,inputId = "save_text", label="URL:", value=paste(session$clientData$url_protocol,"//",
+                                      session$clientData$url_hostname,
+                                      session$clientData$pathname,
+                                      "?year=", input$inYear, 
+                                      "&inst=", inst_ids,
+                                      sep=""))
+      
+    })
   }
 )
