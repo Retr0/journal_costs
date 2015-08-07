@@ -3,6 +3,7 @@ library(ggplot2)
 library(shiny)
 library(scales)
 
+# load and index the data
 data <- fread('journal_costs_melted.tab', header = T)
 institutes <- data[,unique(institute)]
 years <- data[,unique(year)]
@@ -14,6 +15,11 @@ ranks <-
                    frank(-total, ties.method = "min")), by = year]
 ranks[,total := formatC(total, big.mark = ",", format = 'd')]
 setkey(ranks, year, institute)
+
+# precompute nicer labels for the graph
+data[, inst_lab := gsub("University of ", "", institute)]
+data[, inst_lab := gsub(" University", "", inst_lab)]
+data[, inst_lab := gsub(" ", "\n", inst_lab)]
 
 shinyServer(function(input, output, session) {
   output$yearSelector <- renderUI({
@@ -46,12 +52,9 @@ shinyServer(function(input, output, session) {
   output$plot1 <- renderPlot(expr = {
     if (!is.null(input$inInst)) {
       dataGraph <- data[J(as.numeric(input$inYear), input$inInst)]
-      dataGraph[, institute := gsub("University of ", "", institute)]
-      dataGraph[, institute := gsub(" University", "", institute)]
-      dataGraph[, institute := gsub(" ", "\n", institute)]
       p <- (
         ggplot(dataGraph) + geom_bar(aes(
-          x = institute, y = cost, fill = publisher
+          x = inst_lab, y = cost, fill = publisher
         ), stat = "identity")
         + scale_y_continuous(labels = comma)
         + ylab("Total cost (£)")
@@ -84,16 +87,16 @@ shinyServer(function(input, output, session) {
   observe({
     inst_ids <-
       paste(which(institutes %in% input$inInst), sep = "" ,collapse = ",")
+    link <- paste(
+      session$clientData$url_protocol, "//",
+      session$clientData$url_hostname,
+      session$clientData$url_pathname,
+      "?year=", input$inYear,
+      "&inst=", inst_ids,
+      sep = ""
+    )
     updateTextInput(
-      session, inputId = "save_text", label = "Link to current state:",
-      value = paste(
-        session$clientData$url_protocol, "//",
-        session$clientData$url_hostname,
-        session$clientData$url_pathname,
-        "?year=", input$inYear,
-        "&inst=", inst_ids,
-        sep = ""
-      )
+      session, inputId = "save_text", label = "Link to current state:", value = link
     )
   })
 })
